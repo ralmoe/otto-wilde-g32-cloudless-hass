@@ -29,6 +29,8 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
   - Kerntemperaturfühler 2
   - Kerntemperaturfühler 3
   - Kerntemperaturfühler 4
+- Nicht eingesteckte Kerntemperaturfühler liefern "nicht verfügbar" zurück.
+- Ist der Grill ausgeschaltet liefern auch die Zonen-Fühler "nicht verfügbar" zurück.
 
 ## Installation über HACS
 
