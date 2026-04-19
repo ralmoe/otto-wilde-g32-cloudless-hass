@@ -19,7 +19,9 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
 
 ## Funktionen
 
-- TCP-Listener im Hintergrund, keine Middleware, keine Hersteller-Cloud
+- TCP-Listener im Hintergrund
+- Keine Cloud-Verbindung notwendig
+- Seriennummer / POP-Key nicht notwendig
 - 8 Temperatur-Sensoren:
   - Zone 1
   - Zone 2 
@@ -29,8 +31,8 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
   - Kerntemperaturfühler 2
   - Kerntemperaturfühler 3
   - Kerntemperaturfühler 4
-- Nicht eingesteckte Kerntemperaturfühler liefern "nicht verfügbar" zurück.
-- Ist der Grill ausgeschaltet liefern auch die Zonen-Fühler "nicht verfügbar" zurück.
+- Nicht eingesteckte Kerntemperaturfühler liefern "nicht verfügbar" zurück und können in Home Assistant ausgeblendet werden
+- Ist der Grill ausgeschaltet liefern auch die Zonen-Fühler "nicht verfügbar" zurück und können in Home Assistant ausgeblendet werden.
 
 ## Installation über HACS
 
