@@ -45,8 +45,8 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
 
 ## Manuelle Installation
 
-1. Kopiere den Ordner `custom_components/otto-wilde-g32` in dein Home-Assistant-Verzeichnis unter:
-   - `<config>/custom_components/otto-wilde-g32`
+1. Kopiere den Ordner `custom_components/otto_wilde_g32` in dein Home-Assistant-Verzeichnis unter:
+   - `<config>/custom_components/otto_wilde_g32`
 2. Starte Home Assistant neu.
 
 ## Installation der Integration
