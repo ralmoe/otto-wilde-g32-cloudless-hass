@@ -1,12 +1,12 @@
 {
-  "title": "OWG",
+  "title": "Otto Wilde Cloudless",
   "config": {
     "step": {
       "user": {
-        "title": "OWG konfigurieren",
+        "title": "Otto Wilde Cloudless konfigurieren",
         "description": "Konfiguriere die TCP-Einstellungen für deinen Otto Wilde Grill.",
         "data": {
-          "listen_ip": "Listen IP (Grill-IP)",
+          "listen_ip": "IP-Adresse des Grills",
           "port": "Port",
           "timeout_seconds": "Timeout in Sekunden"
         }
