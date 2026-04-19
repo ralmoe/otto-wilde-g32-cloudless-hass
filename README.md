@@ -2,6 +2,15 @@
 
 Custom Integration für den **Otto Wilde G32** mit direktem TCP-Empfang der Temperaturdaten.
 
+## Allgemeine Funktionsweise
+
+Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Cloud. Um diese Daten direkt und ohne Umweg über die Cloud in Home Assistant zu nutzen muss im Router für das lokale Netzwerk ein DNS-Eintrag gesetzt werden, der den Grill dazu veranlasst die Daten an eine lokale IP-Adresse (die der Home-Assistant-Installation) zu senden.
+
+### DNS-Eintrag
+
+- Domain: socket.ottowildeapp.com
+- IP-Adresse für A-Record: IP-Adresse der lokalen Home-Assistant-Installation
+
 ## Funktionen
 
 - UI-basierter Setup-Flow in Home Assistant
