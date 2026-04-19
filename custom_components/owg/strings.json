@@ -22,7 +22,7 @@
         "title": "OWG Optionen",
         "description": "Passe Netzwerkeinstellungen und Timeout an.",
         "data": {
-          "listen_ip": "Listen IP (Grill-IP)",
+          "listen_ip": "IP-Adresse deines Grills",
           "port": "Port",
           "timeout_seconds": "Timeout in Sekunden"
         }

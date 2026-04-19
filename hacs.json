@@ -1,12 +1,8 @@
 {
-  "name": "OWG",
-  "country": [
-    "DE"
-  ],
+  "name": "Otto Wilde Cloudless",
+  "country": ["DE"],
   "homeassistant": "2024.1.0",
   "render_readme": true,
   "content_in_root": false,
-  "domains": [
-    "sensor"
-  ]
+  "domains": ["sensor"]
 }
