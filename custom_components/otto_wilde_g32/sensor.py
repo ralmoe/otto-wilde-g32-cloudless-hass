@@ -76,16 +76,28 @@ class OWGTemperatureSensor(SensorEntity):
             "model": "G32",
             "name": "Otto Wilde G32",
         }
+        
+    def _current_temperature(self) -> float | None:
+        """Return the current runtime temperature with unavailable guard."""
+        value = self._runtime.temperatures[self._sensor_index]
+
+        # Defensive guard: disconnected probes may still surface as literal 1500.0
+        # from upstream payload handling. Home Assistant should treat this as
+        # unavailable, not as a real temperature value.
+        if value == float(UNAVAILABLE_RAW_VALUE):
+            return None
+
+        return value
 
     @property
     def available(self) -> bool:
         """Return True if sensor has valid data."""
-        return self._runtime.sensor_available[self._sensor_index]
+        return self._runtime.sensor_available[self._sensor_index] and self._current_temperature() is not None
 
     @property
     def native_value(self) -> float | None:
         """Return the current temperature value."""
-        return self._runtime.temperatures[self._sensor_index]
+        return self._current_temperature()
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks when entity is added."""
