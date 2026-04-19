@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-DOMAIN = "owg"
+DOMAIN = "otto_wilde_g32"
 INTEGRATION_NAME = "Otto Wilde Cloudless"
 
 CONF_LISTEN_IP = "listen_ip"

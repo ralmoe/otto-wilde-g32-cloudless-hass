@@ -73,8 +73,8 @@ class OWGTemperatureSensor(SensorEntity):
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
             "manufacturer": "Otto Wilde",
-            "model": "OWG Grill",
-            "name": "OWG",
+            "model": "G32",
+            "name": "Otto Wilde G32",
         }
 
     @property
