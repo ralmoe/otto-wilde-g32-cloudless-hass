@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import OWGRuntimeData
-from .const import DOMAIN, SENSOR_NAMES
+from .const import DOMAIN, SENSOR_NAMES, UNAVAILABLE_RAW_VALUE
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -76,7 +76,7 @@ class OWGTemperatureSensor(SensorEntity):
             "model": "G32",
             "name": "Otto Wilde G32",
         }
-        
+
     def _current_temperature(self) -> float | None:
         """Return the current runtime temperature with unavailable guard."""
         value = self._runtime.temperatures[self._sensor_index]
@@ -92,7 +92,10 @@ class OWGTemperatureSensor(SensorEntity):
     @property
     def available(self) -> bool:
         """Return True if sensor has valid data."""
-        return self._runtime.sensor_available[self._sensor_index] and self._current_temperature() is not None
+        return (
+            self._runtime.sensor_available[self._sensor_index]
+            and self._current_temperature() is not None
+        )
 
     @property
     def native_value(self) -> float | None:
