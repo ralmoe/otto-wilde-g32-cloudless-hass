@@ -14,6 +14,8 @@ Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Clou
 #### Beispiel aus Unifi
 <img width="404" height="450" alt="Persönlich_—_UniFi_Network" src="https://github.com/user-attachments/assets/9fd277fd-bbc7-4d32-a3ce-6e3fd6b3a449" />
 
+#### Andere Router 
+Fritz-Boxen unterstützen ggf. kein manuelles setzen von A-Records für das lokale Netzwerk. Hier kann dann aber z.B. ein PI-Hole als primärer DNS-Server Abhilfe schaffen.
 
 ## Funktionen
 
