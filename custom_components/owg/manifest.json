@@ -1,0 +1,14 @@
+{
+  "domain": "owg",
+  "name": "OWG",
+  "version": "1.0.0",
+  "documentation": "https://github.com/owg-ha/owg",
+  "issue_tracker": "https://github.com/owg-ha/owg/issues",
+  "dependencies": [],
+  "codeowners": [
+    "@owg-ha"
+  ],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "single_config_entry": true
+}

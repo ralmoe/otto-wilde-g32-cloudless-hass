@@ -1,0 +1,32 @@
+{
+  "title": "OWG",
+  "config": {
+    "step": {
+      "user": {
+        "title": "OWG konfigurieren",
+        "description": "Konfiguriere die TCP-Einstellungen für deinen Otto Wilde Grill.",
+        "data": {
+          "listen_ip": "Listen IP (Grill-IP)",
+          "port": "Port",
+          "timeout_seconds": "Timeout in Sekunden"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Es ist nur eine OWG-Instanz erlaubt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OWG Optionen",
+        "description": "Passe Netzwerkeinstellungen und Timeout an.",
+        "data": {
+          "listen_ip": "Listen IP (Grill-IP)",
+          "port": "Port",
+          "timeout_seconds": "Timeout in Sekunden"
+        }
+      }
+    }
+  }
+}
