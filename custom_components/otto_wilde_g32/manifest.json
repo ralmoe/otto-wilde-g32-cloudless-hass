@@ -1,12 +1,12 @@
 {
   "domain": "otto_wilde_g32",
   "name": "Otto Wilde Cloudless",
-  "version": "1.0.0",
-  "documentation": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass",
-  "issue_tracker": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass/issues",
-  "dependencies": [],
   "codeowners": ["@ralmoe"],
   "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass",
   "iot_class": "local_push",
+  "issue_tracker": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass/issues",
   "single_config_entry": true
+  "version": "1.0.0"
 }
