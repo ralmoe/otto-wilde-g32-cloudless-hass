@@ -17,8 +17,7 @@ Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Clou
 
 ## Funktionen
 
-- UI-basierter Setup-Flow in Home Assistant
-- TCP-Listener im Hintergrund (asynchron)
+- TCP-Listener im Hintergrund, keine Middleware, keine Hersteller-Cloud
 - 8 Temperatur-Sensoren:
   - Zone 1
   - Zone 2 
@@ -29,27 +28,27 @@ Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Clou
   - Kerntemperaturfühler 3
   - Kerntemperaturfühler 4
 
-## Installation über HACS (Custom Repository)
+## Installation über HACS
 
 1. Öffne **HACS** in Home Assistant.
 2. Gehe zu **Integrationen**.
 3. Öffne das Menü (oben rechts) → **Benutzerdefinierte Repositories**.
-4. Füge dein Repository als Typ **Integration** hinzu.
+4. Füge dein Repository `ralmoe/otto-wilde-g32-cloudless-hass` als Typ **Integration** hinzu.
 5. Suche nach **Otto Wilde Cloudless** und installiere die Integration.
 6. Starte Home Assistant neu.
 
 ## Manuelle Installation
 
-1. Kopiere den Ordner `custom_components/owg` in dein Home-Assistant-Verzeichnis unter:
-   - `<config>/custom_components/owg`
+1. Kopiere den Ordner `custom_components/otto-wilde-g32` in dein Home-Assistant-Verzeichnis unter:
+   - `<config>/custom_components/otto-wilde-g32`
 2. Starte Home Assistant neu.
 
-## Konfiguration in Home Assistant
+## Installation der Integration
 
 1. Gehe zu **Einstellungen → Geräte & Dienste → Integration hinzufügen**.
 2. Suche nach **Otto Wilde Cloudless**.
 3. Trage folgende Werte ein:
-   - IP-Adresse deines Ports
+   - IP-Adresse deines Grills
    - Port (Standard muss nicht verändert werden)
    - Timeout in Sekunden
 4. Speichern.
