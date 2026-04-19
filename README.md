@@ -11,6 +11,10 @@ Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Clou
 - Domain: socket.ottowildeapp.com
 - IP-Adresse für A-Record: IP-Adresse der lokalen Home-Assistant-Installation
 
+#### Beispiel aus Unifi
+<img width="404" height="450" alt="Persönlich_—_UniFi_Network" src="https://github.com/user-attachments/assets/9fd277fd-bbc7-4d32-a3ce-6e3fd6b3a449" />
+
+
 ## Funktionen
 
 - UI-basierter Setup-Flow in Home Assistant
