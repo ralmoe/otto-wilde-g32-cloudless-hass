@@ -7,6 +7,6 @@
   "documentation": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/ralmoe/otto-wilde-g32-cloudless-hass/issues",
-  "single_config_entry": true
+  "single_config_entry": true,
   "version": "1.0.0"
 }
