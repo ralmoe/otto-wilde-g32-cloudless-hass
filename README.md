@@ -57,4 +57,5 @@ Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Clou
 ### Screenshots
 <img width="796" height="994" alt="Otto-Wilde Gauges" src="https://github.com/user-attachments/assets/1a6a6c79-1c88-4a19-9856-3b7108af50c7" />
 
-<img width="796" height="994" alt="Persönlich_—_Übersicht_–_Home_Assistant" src="https://github.com/user-attachments/assets/a7913e21-2c3b-4446-9a95-2e47a1391416" />
+<img width="497" height="791" alt="Otto-Wilde Cloudless Sensoren" src="https://github.com/user-attachments/assets/be702f08-c734-44f9-a3e5-bf9d0c6f5752" />
+
