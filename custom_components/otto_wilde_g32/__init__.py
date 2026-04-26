@@ -44,13 +44,14 @@ class OWGRuntimeData:
         self.sensor_available: list[bool] = [False] * 8
         self.lid_open: bool | None = None
         self.gas_level_percent: float | None = None
+        self.gas_level_kg: float | None = None
         self.last_packet_ts: float | None = None
 
-        self._listeners: set[Callable[[], None]] = set()
+        self._listeners: set[Callable[[set[str]], None]] = set()
         self._server: asyncio.AbstractServer | None = None
         self._timeout_task: asyncio.Task[None] | None = None
 
-    def register_listener(self, listener: Callable[[], None]) -> Callable[[], None]:
+    def register_listener(self, listener: Callable[[set[str]], None]) -> Callable[[], None]:
         """Registriert einen Listener für Statusupdates."""
         self._listeners.add(listener)
 
@@ -59,9 +60,9 @@ class OWGRuntimeData:
 
         return _remove
 
-    def _notify_listeners(self) -> None:
+    def _notify_listeners(self, changed_fields: set[str]) -> None:
         for listener in tuple(self._listeners):
-            listener()
+            listener(changed_fields)
 
     async def async_start(self) -> None:
         """Startet TCP-Server und Timeout-Überwachung."""
@@ -102,7 +103,12 @@ class OWGRuntimeData:
             if time.monotonic() - self.last_packet_ts <= self.timeout_seconds:
                 continue
 
-            if any(self.sensor_available) or self.lid_open is not None or self.gas_level_percent is not None:
+            if (
+                any(self.sensor_available)
+                or self.lid_open is not None
+                or self.gas_level_percent is not None
+                or self.gas_level_kg is not None
+            ):
                 _LOGGER.warning(
                     "OWG Timeout nach %s Sekunden ohne Daten. Sensoren werden unavailable gesetzt.",
                     self.timeout_seconds,
@@ -111,7 +117,10 @@ class OWGRuntimeData:
                 self.temperatures = [None] * 8
                 self.lid_open = None
                 self.gas_level_percent = None
-                self._notify_listeners()
+                self.gas_level_kg = None
+                self._notify_listeners(
+                    {"lid", "gas", *(f"temperature_{index}" for index in range(8))}
+                )
 
     async def _handle_client(
         self,
@@ -149,27 +158,18 @@ class OWGRuntimeData:
             with contextlib.suppress(Exception):
                 await writer.wait_closed()
 
-    def _decode_gas_percent(self, raw_value: int) -> float | None:
-        """Decode gas level percentage from raw protocol value.
+    def _decode_gas(self, payload: bytes) -> tuple[float | None, float | None]:
+        """Dekodiert Gasgewicht in kg und Prozent aus Bytes 22+23 (Big Endian, Gramm)."""
+        gas_raw_grams = int.from_bytes(payload[GAS_LEVEL_OFFSET : GAS_LEVEL_OFFSET + 2], byteorder="big")
 
-        The integration supports multiple observed encodings to stay robust across
-        firmware/protocol variants.
-        """
-        # Direct percentage (0..100)
-        if 0 <= raw_value <= 100:
-            return round(float(raw_value), 1)
+        if gas_raw_grams == 0:
+            return None, None
 
-        # Tenth-of-percent encoding (0..1000 => 0.0..100.0)
-        if 0 <= raw_value <= 1000:
-            return round(raw_value / 10.0, 1)
+        gas_kg = round(gas_raw_grams / 1000.0, 3)
+        max_fill_kg = max(self.gas_bottle_weight_kg, 0.1)
+        gas_percent = round(min((gas_kg / max_fill_kg) * 100.0, 100.0), 1)
 
-        # Legacy calibration formula seen in prior reverse engineering
-        legacy_ratio = ((raw_value - 4192) - 10400) / 11000
-        legacy_percent = legacy_ratio * 100
-        if 0 <= legacy_percent <= 100:
-            return round(legacy_percent, 1)
-
-        return None
+        return gas_kg, gas_percent
 
     def _process_payload(self, payload: bytes) -> None:
         """Dekodiert Sensorwerte aus einem OWG-Paket."""
@@ -193,15 +193,32 @@ class OWGRuntimeData:
             temperatures.append(raw_value / 10)
             availability.append(True)
 
-        lid_raw = int.from_bytes(payload[LID_STATUS_OFFSET : LID_STATUS_OFFSET + 2], byteorder="big")
-        gas_raw = int.from_bytes(payload[GAS_LEVEL_OFFSET : GAS_LEVEL_OFFSET + 2], byteorder="big")
+        lid_raw = payload[LID_STATUS_OFFSET]
+        lid_open = lid_raw == 0x01
+        gas_kg, gas_percent = self._decode_gas(payload)
+
+        changed_fields: set[str] = set()
+        for index, (old_temp, old_available, new_temp, new_available) in enumerate(
+            zip(self.temperatures, self.sensor_available, temperatures, availability, strict=False)
+        ):
+            if old_temp != new_temp or old_available != new_available:
+                changed_fields.add(f"temperature_{index}")
+
+        if self.lid_open != lid_open:
+            changed_fields.add("lid")
+
+        if self.gas_level_percent != gas_percent or self.gas_level_kg != gas_kg:
+            changed_fields.add("gas")
 
         self.temperatures = temperatures
         self.sensor_available = availability
-        self.lid_open = lid_raw > 0
-        self.gas_level_percent = self._decode_gas_percent(gas_raw)
+        self.lid_open = lid_open
+        self.gas_level_percent = gas_percent
+        self.gas_level_kg = gas_kg
         self.last_packet_ts = time.monotonic()
-        self._notify_listeners()
+
+        if changed_fields:
+            self._notify_listeners(changed_fields)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
