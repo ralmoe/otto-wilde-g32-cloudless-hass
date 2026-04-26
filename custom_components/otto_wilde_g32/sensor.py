@@ -63,6 +63,7 @@ class OWGBaseSensor(SensorEntity):
 
     _attr_has_entity_name = True
     _attr_should_poll = False
+    _watched_runtime_fields: frozenset[str] = frozenset()
 
     def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
         self._runtime = runtime
@@ -79,9 +80,10 @@ class OWGBaseSensor(SensorEntity):
         self.async_on_remove(remove_listener)
 
     @callback
-    def _handle_runtime_update(self) -> None:
-        """Write entity state to Home Assistant."""
-        self.async_write_ha_state()
+    def _handle_runtime_update(self, changed_fields: set[str]) -> None:
+        """Write entity state to Home Assistant when relevant runtime fields changed."""
+        if changed_fields & self._watched_runtime_fields:
+            self.async_write_ha_state()
 
 
 class OWGTemperatureSensor(OWGBaseSensor):
@@ -97,6 +99,7 @@ class OWGTemperatureSensor(OWGBaseSensor):
         super().__init__(entry, runtime)
         self.entity_description = description
         self._sensor_index = sensor_index
+        self._watched_runtime_fields = frozenset({f"temperature_{sensor_index}"})
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
 
     def _current_temperature(self) -> float | None:
@@ -132,6 +135,7 @@ class OWGGasLevelPercentSensor(OWGBaseSensor):
     _attr_native_unit_of_measurement = PERCENTAGE
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 1
+    _watched_runtime_fields = frozenset({"gas"})
 
     def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
         super().__init__(entry, runtime)
@@ -153,7 +157,8 @@ class OWGGasLevelKgSensor(OWGBaseSensor):
     _attr_device_class = SensorDeviceClass.WEIGHT
     _attr_native_unit_of_measurement = UnitOfMass.KILOGRAMS
     _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_suggested_display_precision = 2
+    _attr_suggested_display_precision = 3
+    _watched_runtime_fields = frozenset({"gas"})
 
     def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
         super().__init__(entry, runtime)
@@ -161,12 +166,8 @@ class OWGGasLevelKgSensor(OWGBaseSensor):
 
     @property
     def available(self) -> bool:
-        return self._runtime.gas_level_percent is not None
+        return self._runtime.gas_level_kg is not None
 
     @property
     def native_value(self) -> float | None:
-        if self._runtime.gas_level_percent is None:
-            return None
-
-        kg = self._runtime.gas_bottle_weight_kg * (self._runtime.gas_level_percent / 100.0)
-        return round(kg, 2)
+        return self._runtime.gas_level_kg

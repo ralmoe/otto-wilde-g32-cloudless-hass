@@ -58,6 +58,7 @@ class OWGLidBinarySensor(BinarySensorEntity):
         self.async_on_remove(remove_listener)
 
     @callback
-    def _handle_runtime_update(self) -> None:
+    def _handle_runtime_update(self, changed_fields: set[str]) -> None:
         """Write entity state to Home Assistant."""
-        self.async_write_ha_state()
+        if "lid" in changed_fields:
+            self.async_write_ha_state()
