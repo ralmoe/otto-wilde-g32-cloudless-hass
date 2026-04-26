@@ -11,7 +11,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature
+from homeassistant.const import PERCENTAGE, UnitOfMass, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -41,22 +41,51 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up OWG temperature sensors from a config entry."""
+    """Set up OWG sensors from a config entry."""
     runtime: OWGRuntimeData = hass.data[DOMAIN][entry.entry_id]
 
-    async_add_entities(
+    entities: list[SensorEntity] = [
+        OWGTemperatureSensor(entry, runtime, index, description)
+        for index, description in enumerate(SENSOR_DESCRIPTIONS)
+    ]
+    entities.extend(
         [
-            OWGTemperatureSensor(entry, runtime, index, description)
-            for index, description in enumerate(SENSOR_DESCRIPTIONS)
+            OWGGasLevelPercentSensor(entry, runtime),
+            OWGGasLevelKgSensor(entry, runtime),
         ]
     )
 
+    async_add_entities(entities)
 
-class OWGTemperatureSensor(SensorEntity):
-    """Representation of one OWG temperature sensor."""
+
+class OWGBaseSensor(SensorEntity):
+    """Common base class for OWG sensor entities."""
 
     _attr_has_entity_name = True
     _attr_should_poll = False
+
+    def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
+        self._runtime = runtime
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, entry.entry_id)},
+            "manufacturer": "Otto Wilde",
+            "model": "G32",
+            "name": "Otto Wilde G32",
+        }
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks when entity is added."""
+        remove_listener = self._runtime.register_listener(self._handle_runtime_update)
+        self.async_on_remove(remove_listener)
+
+    @callback
+    def _handle_runtime_update(self) -> None:
+        """Write entity state to Home Assistant."""
+        self.async_write_ha_state()
+
+
+class OWGTemperatureSensor(OWGBaseSensor):
+    """Representation of one OWG temperature sensor."""
 
     def __init__(
         self,
@@ -65,17 +94,10 @@ class OWGTemperatureSensor(SensorEntity):
         sensor_index: int,
         description: OWGTemperatureSensorDescription,
     ) -> None:
+        super().__init__(entry, runtime)
         self.entity_description = description
-        self._runtime = runtime
         self._sensor_index = sensor_index
-
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, entry.entry_id)},
-            "manufacturer": "Otto Wilde",
-            "model": "G32",
-            "name": "Otto Wilde G32",
-        }
 
     def _current_temperature(self) -> float | None:
         """Return the current runtime temperature with unavailable guard."""
@@ -102,12 +124,49 @@ class OWGTemperatureSensor(SensorEntity):
         """Return the current temperature value."""
         return self._current_temperature()
 
-    async def async_added_to_hass(self) -> None:
-        """Register callbacks when entity is added."""
-        remove_listener = self._runtime.register_listener(self._handle_runtime_update)
-        self.async_on_remove(remove_listener)
 
-    @callback
-    def _handle_runtime_update(self) -> None:
-        """Write entity state to Home Assistant."""
-        self.async_write_ha_state()
+class OWGGasLevelPercentSensor(OWGBaseSensor):
+    """Sensor for gas bottle fill level in percent."""
+
+    _attr_name = "Füllstand Gasflasche"
+    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_suggested_display_precision = 1
+
+    def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
+        super().__init__(entry, runtime)
+        self._attr_unique_id = f"{entry.entry_id}_gas_fill_percent"
+
+    @property
+    def available(self) -> bool:
+        return self._runtime.gas_level_percent is not None
+
+    @property
+    def native_value(self) -> float | None:
+        return self._runtime.gas_level_percent
+
+
+class OWGGasLevelKgSensor(OWGBaseSensor):
+    """Sensor for gas bottle fill amount in kg."""
+
+    _attr_name = "Füllmenge Gasflasche"
+    _attr_device_class = SensorDeviceClass.WEIGHT
+    _attr_native_unit_of_measurement = UnitOfMass.KILOGRAMS
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, entry: ConfigEntry, runtime: OWGRuntimeData) -> None:
+        super().__init__(entry, runtime)
+        self._attr_unique_id = f"{entry.entry_id}_gas_fill_kg"
+
+    @property
+    def available(self) -> bool:
+        return self._runtime.gas_level_percent is not None
+
+    @property
+    def native_value(self) -> float | None:
+        if self._runtime.gas_level_percent is None:
+            return None
+
+        kg = self._runtime.gas_bottle_weight_kg * (self._runtime.gas_level_percent / 100.0)
+        return round(kg, 2)
