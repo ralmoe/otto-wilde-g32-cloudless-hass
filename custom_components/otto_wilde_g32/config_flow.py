@@ -10,8 +10,10 @@ from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
+    CONF_GAS_BOTTLE_WEIGHT_KG,
     CONF_LISTEN_IP,
     CONF_TIMEOUT_SECONDS,
+    DEFAULT_GAS_BOTTLE_WEIGHT_KG,
     DEFAULT_LISTEN_IP,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT_SECONDS,
@@ -24,6 +26,7 @@ def _build_schema(
     listen_ip_default: str,
     port_default: int,
     timeout_default: int,
+    gas_bottle_weight_default: float,
 ) -> vol.Schema:
     return vol.Schema(
         {
@@ -34,6 +37,10 @@ def _build_schema(
             vol.Required(CONF_TIMEOUT_SECONDS, default=timeout_default): vol.All(
                 vol.Coerce(int), vol.Range(min=1, max=3600)
             ),
+            vol.Required(
+                CONF_GAS_BOTTLE_WEIGHT_KG,
+                default=gas_bottle_weight_default,
+            ): vol.All(vol.Coerce(float), vol.Range(min=0.1, max=100.0)),
         }
     )
 
@@ -57,6 +64,7 @@ class OWGConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 listen_ip_default=DEFAULT_LISTEN_IP,
                 port_default=DEFAULT_PORT,
                 timeout_default=DEFAULT_TIMEOUT_SECONDS,
+                gas_bottle_weight_default=DEFAULT_GAS_BOTTLE_WEIGHT_KG,
             ),
         )
 
@@ -90,6 +98,13 @@ class OWGOptionsFlow(config_entries.OptionsFlow):
             CONF_TIMEOUT_SECONDS,
             self._config_entry.data.get(CONF_TIMEOUT_SECONDS, DEFAULT_TIMEOUT_SECONDS),
         )
+        gas_bottle_weight_kg = self._config_entry.options.get(
+            CONF_GAS_BOTTLE_WEIGHT_KG,
+            self._config_entry.data.get(
+                CONF_GAS_BOTTLE_WEIGHT_KG,
+                DEFAULT_GAS_BOTTLE_WEIGHT_KG,
+            ),
+        )
 
         return self.async_show_form(
             step_id="init",
@@ -97,5 +112,6 @@ class OWGOptionsFlow(config_entries.OptionsFlow):
                 listen_ip_default=listen_ip,
                 port_default=port,
                 timeout_default=timeout_seconds,
+                gas_bottle_weight_default=gas_bottle_weight_kg,
             ),
         )

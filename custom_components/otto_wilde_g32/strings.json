@@ -8,7 +8,8 @@
         "data": {
           "listen_ip": "IP-Adresse des Grills",
           "port": "Port",
-          "timeout_seconds": "Timeout in Sekunden"
+          "timeout_seconds": "Timeout in Sekunden",
+          "gas_bottle_weight_kg": "Nutzbare Gasfüllmenge bei voller Flasche (kg)"
         }
       }
     },
@@ -24,7 +25,8 @@
         "data": {
           "listen_ip": "IP-Adresse des Grills",
           "port": "Port",
-          "timeout_seconds": "Timeout in Sekunden"
+          "timeout_seconds": "Timeout in Sekunden",
+          "gas_bottle_weight_kg": "Nutzbare Gasfüllmenge bei voller Flasche (kg)"
         }
       }
     }
