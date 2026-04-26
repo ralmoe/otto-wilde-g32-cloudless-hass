@@ -1,5 +1,7 @@
 # Otto Wilde G32 Home Assistant Integration
 
+*Version: 1.0.2-beta*
+
 Custom Integration für den **Otto Wilde G32** mit direktem TCP-Empfang der Temperaturdaten.
 
 ## Allgemeine Funktionsweise
@@ -31,6 +33,9 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
   - Kerntemperaturfühler 2
   - Kerntemperaturfühler 3
   - Kerntemperaturfühler 4
+- Sensor für Deckelstatus (offen / geschlossen)
+- Sensor für prozentualen Füllstand der Gasflasche
+- Sensor für Gewicht der Gasflasche
 - Nicht eingesteckte Kerntemperaturfühler liefern "nicht verfügbar" zurück und können in Home Assistant ausgeblendet werden
 - Ist der Grill ausgeschaltet liefern auch die Zonen-Fühler "nicht verfügbar" zurück und können in Home Assistant ausgeblendet werden.
 
