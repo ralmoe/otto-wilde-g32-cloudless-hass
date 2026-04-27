@@ -1,12 +1,12 @@
 # Otto Wilde G32 Home Assistant Integration
 
-*Version: 1.0.2-beta*
+*Version: 1.1.0*
 
-Custom Integration für den **Otto Wilde G32** mit direktem TCP-Empfang der Temperaturdaten.
+Custom Integration für den **Otto Wilde G32** mit direktem TCP-Empfang der Temperaturdaten, Deckelstatus und Füllstand der Gasflasche, wenn ein Gas-Buddy angeschlossen ist.
 
 ## Allgemeine Funktionsweise
 
-Der Otto Wilde G32 sendet seine Temoperaturdaten via WLAN an die Otto-Wilde-Cloud. Um diese Daten direkt und ohne Umweg über die Cloud in Home Assistant zu nutzen muss im Router für das lokale Netzwerk ein DNS-Eintrag gesetzt werden, der den Grill dazu veranlasst die Daten an eine lokale IP-Adresse (die der Home-Assistant-Installation) zu senden.
+Der Otto Wilde G32 sendet seine Daten via WLAN an die Otto-Wilde-Cloud. Um diese Daten direkt und ohne Umweg über die Cloud in Home Assistant zu nutzen muss im Router für das lokale Netzwerk ein DNS-Eintrag gesetzt werden, der den Grill dazu veranlasst die Daten an eine lokale IP-Adresse (die der Home-Assistant-Installation) zu senden.
 
 ### DNS-Eintrag
 
@@ -67,5 +67,8 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
 ### Screenshots
 <img height="500" alt="Otto-Wilde Gauges" src="https://github.com/user-attachments/assets/1a6a6c79-1c88-4a19-9856-3b7108af50c7" style="float: left"/>
 
-<img height="500" alt="Otto-Wilde Cloudless Sensoren" src="https://github.com/user-attachments/assets/be702f08-c734-44f9-a3e5-bf9d0c6f5752" style="float: left"/>
+<img height="500" alt="sensors" src="https://github.com/user-attachments/assets/086249aa-9a77-4d29-b735-f4907beeab2e" style="float: left" />
+
+
+
 
