@@ -41,12 +41,7 @@ Fritzboxen unterstützen ggf. kein manuelles setzen von A-Records für das lokal
 
 ## Installation über HACS
 
-1. Öffne **HACS** in Home Assistant.
-2. Gehe zu **Integrationen**.
-3. Öffne das Menü (oben rechts) → **Benutzerdefinierte Repositories**.
-4. Füge dein Repository `ralmoe/otto-wilde-g32-cloudless-hass` als Typ **Integration** hinzu.
-5. Suche nach **Otto Wilde Cloudless** und installiere die Integration.
-6. Starte Home Assistant neu.
+[![Open your Home Assistant instance and open "midea_ac_lan" inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ralmoe&repository=otto-wilde-g32-cloudless-hass)
 
 ## Manuelle Installation
 
