@@ -1,7 +1,5 @@
 # Otto Wilde G32 Home Assistant Integration
 
-*Version: 1.1.0*
-
 Custom Integration für den **Otto Wilde G32** mit direktem TCP-Empfang der Temperaturdaten, Deckelstatus und Füllstand der Gasflasche, wenn ein Gas-Buddy angeschlossen ist.
 
 ## Allgemeine Funktionsweise
